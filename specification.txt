@@ -1,0 +1,22 @@
+ Brainfuckwit Specification:
+ Big 'ol tape, each cell set to 0. All values are unsigned short integers
+ A 1-value stack is also supported for easier operations.
+ 
+ > : Hop over to the next cell.
+ < : Hop over to the previous cell.
+ + : Bump up current cell by 1.
+ - : Bump down current cell by 1.
+ [ : Skip past the next ] you see if the current cell's 0.
+ ] : Go back to the last [ you saw if the current cell's 0.
+ . : Outputs the current cell as an ASCII char.
+ , : Overwrite the current cell's value with a ASCII char (from user).
+ ':' : Outputs the current cell as a number.
+ ';' : Overwrite the current cell's value with a nnumber (from user).
+ $ : Replace cell with the bin's value, latter gets set back to 0.
+ # : Put the cell's value in the bin, removing it from the cell.
+ ? : Overwrite current cell with a random number from 1 to 255.
+ ! : Resets the current cell back to 0.
+ @ : Doubles the current cell.
+ % : Multiplies the current cell by the bin's value. (This deletes the bin's value, does nothing if the bin is 0)
+ / : If the next cell's 0, then shift the current cell ahead.
+ \ : If the previous cell's 0, then shift the current cell back.
