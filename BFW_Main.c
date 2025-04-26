@@ -1,4 +1,5 @@
 #include "BFW_Compiler.c"
+#define FMAX 16
 
 void HelpScreen()
 {

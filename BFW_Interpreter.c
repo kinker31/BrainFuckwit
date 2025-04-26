@@ -1,31 +1,58 @@
 #include <ncurses.h>
-#include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
-#include <unistd.h>
+
 #define suint unsigned short int
 
 #define TAPE_SIZE 65536
 #define MAX_QUERY 1024
-#define MAX_DEPTH 8
 #define MAX_LOOPS 128
-#define FMAX 16
 
 static char query[MAX_QUERY] = {0};
 
 #define WITHIN_BOUNDS (counter > 0) || (counter < (TAPE_SIZE - 1))
-#define SWAP_LOWBOUNDS (counter > 1) && (TAPE[pointy - 1] == 0)
-#define SWAP_HIGHBOUNDS (counter > (TAPE_SIZE - 2)) && (TAPE[pointy + 1] == 0)
 
 // We don't need to worry about another value,
 // as the interpreter makes sure one of them is zero before swapping.
 void InlineSwap(suint *a, suint *b) { *b = *a; *a = 0; }
 
+//false emulates normal Brainfuck, true lets you input a suint directly
+void InterpreterInput(bool type, suint *input)
+{
+	suint value = 0;
+	char[6] typeStr = "a char";
+	if(type) {typeStr = "an int";}
+	printw("Please input %s: ", typeStr); refresh();
+	if(!type) {value = (suint)getch();}
+	else {scanw(" %hu", &value);}
+	*input = value;
+}
+
+//False is for '[', true is for ']'.
+void BracketLogic(bool type, suint *c, char *qb)
+{
+	suint depth = 1;
+	static suint loops = 0;
+	char a = '['; char b = ']';
+	if (type){ a = ']'; b = '[';}
+	while(qb[*c] != b && depth != 0)
+	{
+		if(type){*c++;} else{*c--;}
+		if(qb[*c] == a) {depth++;}
+		if(qb[*c] == b) {depth--; if(type){loops++;} else{loops = 0;}}
+		if(loops > MAX_LOOPS)
+		{
+			printw("Way too much looping for my liking! Aborting...\n"); 
+			refresh(); sleep(1); abort();
+		}
+	}
+}
+
 void BrainFuckwitInterpreter(char q[])
 {
 	suint TAPE[TAPE_SIZE] = {0};
-	suint depth, loops, counter, binValue, pointy = 0;
+	suint counter, binValue, pointy = 0;
 	while((counter < MAX_QUERY) && (q[counter] != 0))
 	{
 		switch(q[counter])
@@ -48,23 +75,23 @@ void BrainFuckwitInterpreter(char q[])
 			break;
 			
 			case ',':
-			//TODO: Figure out if input should be a function or not
+			InterpreterInput(false, TAPE[pointy]);
 			break;
 			
 			case ':':
 			printw("%hu ", TAPE[pointy]); refresh(); break;
 			
 			case ';':
-			//TODO: Figure out if input should be a function or not
+			InterpreterInput(true, TAPE[pointy]);
 			break;
 			
 			case '/':
-			if(SWAP_HIGHBOUNDS)
+			if((counter > (TAPE_SIZE - 2)) && (TAPE[pointy + 1] == 0))
 			{InlineSwap(&TAPE[pointy], &TAPE[pointy + 1]);}
 			break;
 			
 			case '\\':
-			if(SWAP_LOWBOUNDS)
+			if((counter > 1) && (TAPE[pointy - 1] == 0))
 			{InlineSwap(&TAPE[pointy], &TAPE[pointy - 1]);}
 			break;
 			
@@ -87,50 +114,11 @@ void BrainFuckwitInterpreter(char q[])
 			TAPE[pointy] *= binValue; binValue = 0; break;
 			
 			case '[':
-			if(TAPE[pointy] == 0)
-			{
-				depth++;
-				while((q[counter] != ']') || (depth != 0))
-				{
-					counter++;
-					if(q[counter] == '[') {depth++;}
-					if(q[counter] == ']') {depth--; loops = 0;}
-					if(depth > MAX_DEPTH)
-					{
-						printw("Like I've got the time to tawdle through THAT many brackets. Aborting...\n");
-						refresh(); sleep(1); abort();
-					}
-				}
-			}
+			if(TAPE[pointy] == 0){BracketLogic(false, &counter, q);}
 			break;
 			
 			case ']':
-			if(TAPE[pointy] != 0)
-			{
-				if(depth == 0) 
-				{
-					printw(" LOL BUG???\n"); 
-					refresh();sleep(1); abort();
-				}
-				depth++;
-				while((q[counter] != '[') || (depth != 0))
-				{
-					counter--;
-					if(q[counter] == ']') {depth++;}
-					if(q[counter] == '[') {depth--;}
-					if(depth > MAX_DEPTH)
-					{
-						printw("Like I've got the time to tawdle through THAT many brackets. Aborting...\n");
-						refresh(); sleep(1); abort();
-					}
-				}
-				if(loops > MAX_LOOPS) 
-				{
-					printw("Way too much looping for my liking! Aborting...\n"); 
-					refresh(); sleep(1); abort();
-				}
-				loops++;
-				}
+			if(TAPE[pointy] != 0) {BracketLogic(true, &counter, q);}
 			break;
 			
 			default: break;
