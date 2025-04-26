@@ -1,7 +1,9 @@
 #include <ncurses.h>
+#include <unistd.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 #define suint unsigned short int
 
@@ -21,8 +23,8 @@ void InlineSwap(suint *a, suint *b) { *b = *a; *a = 0; }
 void InterpreterInput(bool type, suint *input)
 {
 	suint value = 0;
-	char[6] typeStr = "a char";
-	if(type) {typeStr = "an int";}
+	char typeStr[7] = "a char";
+	if(type) {strcpy(typeStr, "an int");}
 	printw("Please input %s: ", typeStr); refresh();
 	if(!type) {value = (suint)getch();}
 	else {scanw(" %hu", &value);}
@@ -75,14 +77,14 @@ void BrainFuckwitInterpreter(char q[])
 			break;
 			
 			case ',':
-			InterpreterInput(false, TAPE[pointy]);
+			InterpreterInput(false, &TAPE[pointy]);
 			break;
 			
 			case ':':
 			printw("%hu ", TAPE[pointy]); refresh(); break;
 			
 			case ';':
-			InterpreterInput(true, TAPE[pointy]);
+			InterpreterInput(true, &TAPE[pointy]);
 			break;
 			
 			case '/':
