@@ -17,6 +17,6 @@
  ? : Overwrite current cell with a random number from 1 to 255.
  ! : Resets the current cell back to 0.
  @ : Doubles the current cell.
- % : Multiplies the current cell by the bin's value. (This deletes the bin's value, does nothing if the bin is 0)
+ % : Multiplies the current cell by the bin's value. This deletes the bin's value as well.
  / : If the next cell's 0, then shift the current cell ahead.
  \ : If the previous cell's 0, then shift the current cell back.

@@ -14,10 +14,9 @@
 static char query[MAX_QUERY] = {0};
 
 #define WITHIN_BOUNDS (counter > 0) || (counter < (TAPE_SIZE - 1))
-
 // We don't need to worry about another value,
 // as the interpreter makes sure one of them is zero before swapping.
-void InlineSwap(suint *a, suint *b) { *b = *a; *a = 0; }
+#define InlineSwap(a, b) ((b = a) (a = 0))
 
 //false emulates normal Brainfuck, true lets you input a suint directly
 void InterpreterInput(bool type, suint *input)

@@ -1,4 +1,5 @@
 bfw
 default.bfw
 BFW_Main
+compiledbfwscript.c
 *.o
