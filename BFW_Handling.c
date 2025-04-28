@@ -8,7 +8,12 @@ void ShowCurrentScript(suint l)
 	printw(" "); refresh();
 }
 
-void ClearCurrentScript() { query[] = {0}; }
+void ClearCurrentScript(suint *l) 
+{ 
+	for(suint i = 0; i < *l; i++)
+	{ query[i] = 0; }
+	*l = 0;
+}
 
 void LaunchBFWEditor()
 {

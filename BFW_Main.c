@@ -48,7 +48,7 @@ void InteractiveHandler()
 			HelpScreen();
 			break;
 			
-			case 'q':s
+			case 'q':
 			printw("See you next time!\n");
 			refresh();
 			sleep(1);
@@ -70,22 +70,22 @@ int main(int argc, char* argv[])
 	initscr();
 	if(argc > 1)
 	{
-		switch argv[1]
+		//argv[1][1] should be the second character of the second argument, ideally i or c.
+		char value = argv[1][1];
+		switch (value)
 		{
-			case "-c":
-			case "-compile":
+			case 'c':
 			OpenBFWFile(false, argv[2]);
 			BrainFuckwitCompiler(query);
 			break;
 			
-			case "-i"
-			case "-interpret":
+			case 'i':
 			OpenBFWFile(false, argv[2]);
 			BrainFuckwitInterpreter(query);
 			break;
 			
 			default:
-			printw("Usage case: bfw [-c|-i|-compile|-interpret] [(filename).bfw] (Press any key to exit.)"); refresh(); char dummy = getch();
+			printw("Usage case: bfw [-c|-i|] [(filename).bfw] (Press any key to exit.)"); refresh(); char dummy = getch();
 			break;
 		}
 	}
