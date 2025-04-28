@@ -45,7 +45,7 @@ void BracketLogic(bool type, suint *c, char *qb)
 		if(loops > MAX_LOOPS)
 		{
 			printw("Way too much looping for my liking! Aborting...\n"); 
-			refresh(); sleep(1); abort();
+			refresh(); sleep(1); endwin(); abort();
 		}
 	}
 }
@@ -126,4 +126,5 @@ void BrainFuckwitInterpreter(char q[])
 		}
 		counter++;
 	}
+	printw("The interpreter has finished! Press the any key to continue. "); refresh(); char dummy = getch();
 }

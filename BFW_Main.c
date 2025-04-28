@@ -1,95 +1,95 @@
-#include "BFW_Compiler.c"
-#define FMAX 16
+#include "BFW_Handling.c"
 
 void HelpScreen()
 {
+	clear();
 	printw("Pressing \'e\' will let you type in a BrainFuckwit script.\n");
-	printw("Pressing \'s\' will save the last script you made as a file.");
-	printw("Pressing \'l\' lets you load a BrainFuckwit file.\n");
 	printw("Pressing \'x\' loads up an example script, showcasing some of BrainFuckwit\'s capabilities.\n");
+	printw("Pressing \'i\' runs the interpreter on a script you made/loaded.\n");
+	printw("Pressing \'c\' runs the compiler on a script you made/loaded\n");
 	printw("Pressing \'h\' brings up this screen.\n");
-	printw("Pressing \'c\' compiles the script you made/loaded into C code.\n");
 	printw("Pressing \'q\' exits the program.\n\n");
-	printw("Press the any key to continue.\n Feel free to mash your face on the keyboard if you can't find it.\n");
+	printw("Press the any key to continue.\nFeel free to mash your face on the keyboard if you can't find it.\n");
 	char dummy = getch();
 }
 
-void OkayYouEnterItThenDipshit()
+void InteractiveHandler()
 {
-	
-}
-
-void OpenBFWFile()
-{
-	FILE *witfuck;
-	char fileName[FMAX] = {0};
-	printw("For reasons beyond my ability to care, ");
-	printw("you only get a %hu-long filename. \n", FILENAME_MAX);
-	printw("Please enter the name of the file you want to open: ");
-	refresh();
-
-
-	fclose(witfuck);
-}
-
-void SaveBFWFile(char q[])
-{
-	FILE *witfuck;
-	char fileName[FMAX] = {0};
-	printw("For reasons beyond my ability to care, ");
-	printw("you only get a %hu-long filename. \n", FILENAME_MAX);
-	printw("Please enter the name of the script you want to save: ");
-	refresh();
-
-	fclose(witfuck);
-}
-
-int main()
-{
-	srand(time(NULL));
 	char selector = 'p';
-	initscr();
 	printw("Welcome to matrixDoppelganger's BrainFuckwit Program!!!\n");
 	refresh();
 	sleep(1);
 	while(selector != 'q')
-{
-	clear();
-	printw("Current Selector value is %c\n", selector);
-	printw("Make your selection now. \nPress 'h' for help if you're lost: "); refresh();
-	selector = getch(); printw("\n");
-	switch(selector)
 	{
-		case 'e':
-		OkayYouEnterItThenDipshit();
-		break;
-		
-		case 'l':
-		//OpenBFWFile();
-		break;
-		
-		case 's':
-		//SaveBFWFile(query);
-		break;
-		
-		case 'h':
-		HelpScreen();
-		break;
-		
-		case 'q':
-		printw("See you next time, provided you're not running away screaming!\n");
-		refresh();
-		sleep(1);
-		break;
-		
-		default:
-		printw("Gonna need an actual selection, yo.\n");
-		refresh();
-		sleep(1);
-		break;
+		clear();
+		printw("Current Selector value is %c\n", selector);
+		printw("Make your selection now. \nPress 'h' for help if you're lost: "); refresh();
+		selector = getch(); printw("\n");
+		switch(selector)
+		{
+			case 'e':
+			LaunchBFWEditor();
+			break;
+			
+			case 'x':
+			OpenBFWFile(false, "examplescript.bfw");
+			printw("Example script loaded! Whever you want to interpret or compile it is up to you.\nPress the any key to continue..."); refresh(); char dummy = getch();
+			break;
+			
+			case 'i':
+			if(query[0] != 0){BrainFuckwitInterpreter(query);}
+			break;
+			
+			case 'c':
+			if(query[0] != 0){BrainFuckwitCompiler(query);}
+			break;
+			
+			case 'h':
+			HelpScreen();
+			break;
+			
+			case 'q':s
+			printw("See you next time!\n");
+			refresh();
+			sleep(1);
+			break;
+			
+			default:
+			printw("Gonna need an actual selection, yo.\n");
+			refresh();
+			sleep(1);
+			break;
+		}
 	}
-}
 refresh();
-endwin();
-return 0;
+}
+
+int main(int argc, char* argv[])
+{
+	srand(time(NULL));
+	initscr();
+	if(argc > 1)
+	{
+		switch argv[1]
+		{
+			case "-c":
+			case "-compile":
+			OpenBFWFile(false, argv[2]);
+			BrainFuckwitCompiler(query);
+			break;
+			
+			case "-i"
+			case "-interpret":
+			OpenBFWFile(false, argv[2]);
+			BrainFuckwitInterpreter(query);
+			break;
+			
+			default:
+			printw("Usage case: bfw [-c|-i|-compile|-interpret] [(filename).bfw] (Press any key to exit.)"); refresh(); char dummy = getch();
+			break;
+		}
+	}
+	else{InteractiveHandler();}
+	endwin();
+	return 0;
 }
