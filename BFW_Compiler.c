@@ -2,7 +2,8 @@
 
 void BrainFuckwitCompiler(char q[])
 {
-	FILE *bfwFile = fopen("compiledbfwscript.c", w);
+	suint counter = 0;
+	FILE *bfwFile = fopen("compiledbfwscript.c", "w+");
 	fprintf(bfwFile, "#include <stdio.h>\n");
 	fprintf(bfwFile, "#include <stdlib.h>\n");
 	fprintf(bfwFile, "#include <time.h>\n\n");
@@ -74,7 +75,7 @@ void BrainFuckwitCompiler(char q[])
 			default: break;
 		}
 	}
-	fprintf(bfwFile, "return 0;\n}")
+	fprintf(bfwFile, "return 0;\n}");
 	fclose(bfwFile);
-	printw("Thy script compiled!\nDo keep in mind though, until I can figure out how to call GCC within C code, you'll have to build the program manaully.\nPress the any key to continue. "); refresh; char dummy = getch();
+	printw("Thy script compiled!\nDo keep in mind though, until I can figure out how to call GCC within C code, you'll have to build the program manaully.\nPress the any key to continue. "); refresh(); char dummy = getch();
 }
