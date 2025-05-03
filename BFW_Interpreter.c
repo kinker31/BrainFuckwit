@@ -31,17 +31,17 @@ void InterpreterInput(bool type, suint *input)
 }
 
 //False is for '[', true is for ']'.
-void BracketLogic(bool type, suint *c, char *qb)
+void BracketLogic(bool type, suint* c)
 {
 	suint depth = 1;
 	static suint loops = 0;
 	char a = '['; char b = ']';
 	if (type){ a = ']'; b = '[';}
-	while(qb[*c] != b && depth != 0)
+	while(query[*c] != b && depth != 0)
 	{
-		if(type){*c++;} else{*c--;}
-		if(qb[*c] == a) {depth++;}
-		if(qb[*c] == b) {depth--; if(type){loops++;} else{loops = 0;}}
+		if(type){(*c)--;} else{(*c)++;}
+		if(query[*c] == a) {depth++;}
+		if(query[*c] == b) {depth--; if(type){loops++;} else{loops = 0;}}
 		if(loops > MAX_LOOPS)
 		{
 			printw("Way too much looping for my liking! Aborting...\n"); 
@@ -50,13 +50,14 @@ void BracketLogic(bool type, suint *c, char *qb)
 	}
 }
 
-void BrainFuckwitInterpreter(char q[])
+void BrainFuckwitInterpreter()
 {
 	suint TAPE[TAPE_SIZE] = {0};
 	suint counter, binValue, pointy = 0;
-	while((counter < MAX_QUERY) && (q[counter] != 0))
+	while((counter < MAX_QUERY) && (query[counter] != 0))
 	{
-		switch(q[counter])
+		
+		switch(query[counter])
 		{
 			case '+':
 			TAPE[pointy]++; break;
@@ -115,11 +116,11 @@ void BrainFuckwitInterpreter(char q[])
 			TAPE[pointy] *= binValue; binValue = 0; break;
 			
 			case '[':
-			if(TAPE[pointy] == 0){BracketLogic(false, &counter, q);}
+			if(TAPE[pointy] == 0){BracketLogic(false, &counter);}
 			break;
 			
 			case ']':
-			if(TAPE[pointy] != 0) {BracketLogic(true, &counter, q);}
+			if(TAPE[pointy] != 0) {BracketLogic(true, &counter);}
 			break;
 			
 			default: break;

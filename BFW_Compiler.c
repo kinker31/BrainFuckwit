@@ -1,6 +1,6 @@
 #include "BFW_Interpreter.c"
 
-void BrainFuckwitCompiler(char q[])
+void BrainFuckwitCompiler()
 {
 	suint counter = 0;
 	FILE *bfwFile = fopen("compiledbfwscript.c", "w+");
@@ -14,9 +14,9 @@ void BrainFuckwitCompiler(char q[])
 	fprintf(bfwFile, "#define InlineSwap(a, b) ((b = a) (a = 0))\n\n");
 	fprintf(bfwFile, "int main()\n{\n");
 	fprintf(bfwFile, "srand(time(NULL));\nsuint TAPE[MAX_SIZE} = {0};\nsuint counter, binVal = 0;\n\n");
-	while((counter < MAX_QUERY) && (q[counter] != 0))
+	while((counter < MAX_QUERY) && (query[counter] != 0))
 	{
-		switch(q[counter])
+		switch(query[counter])
 		{
 			case '+':
 			fprintf(bfwFile, "CELL++;\n"); break;

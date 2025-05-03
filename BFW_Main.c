@@ -37,11 +37,11 @@ void InteractiveHandler()
 			break;
 			
 			case 'i':
-			if(query[0] != 0){BrainFuckwitInterpreter(query);}
+			if(query[0] != 0){BrainFuckwitInterpreter();}
 			break;
 			
 			case 'c':
-			if(query[0] != 0){BrainFuckwitCompiler(query);}
+			if(query[0] != 0){BrainFuckwitCompiler();}
 			break;
 			
 			case 'h':
@@ -78,12 +78,12 @@ int main(int argc, char* argv[])
 		{
 			case 'c':
 			OpenBFWFile(false, argv[2]);
-			BrainFuckwitCompiler(query);
+			BrainFuckwitCompiler();
 			break;
 			
 			case 'i':
 			OpenBFWFile(false, argv[2]);
-			BrainFuckwitInterpreter(query);
+			BrainFuckwitInterpreter();
 			break;
 			
 			default:
