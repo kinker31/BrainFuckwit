@@ -1,2 +1,2 @@
 #! /bin/bash
-gcc -Wall -o bfw ./BFW_Main.c -lncurses
+gcc -Wall -Os -o bfw ./BFW_Main.c -lncurses

@@ -1,5 +1,5 @@
 #include "BFW_Compiler.c"
-#define FMAX 16
+#define FMAX 17
 
 //True is for interactive mode, false is for direct terminal mode. The second argument is only used when the first one's false.
 void OpenBFWFile(bool mode, char name[])
@@ -7,16 +7,16 @@ void OpenBFWFile(bool mode, char name[])
 	FILE *witfuck;
 	if(mode)
 	{
-	char fileName[FMAX] = {0};
-	printw("For reasons beyond my ability to care, ");
-	printw("you only get a %hu-long filename. \n", FILENAME_MAX);
-	printw("Please enter the name of the file you want to open: "); refresh(); scanw(" %s", fileName);
-	char fullName[FMAX + 6] = "~/bfw/";
-	strcat(fullName, fileName);
-	witfuck = fopen(fullName, "r");
+		char fileName[FMAX] = {0};
+		printw("\nFor reasons beyond my ability to care, ");
+		printw("you only get a %hu-long filename. \n", (FMAX - 1));
+		printw("Please enter the name of the file you want to open: "); refresh(); scanw(" %16s", fileName);
+		char fullName[FMAX + 6] = "~/bfw/";
+		strcat(fullName, fileName);
+		witfuck = fopen(fullName, "r");
 	}
 	else {witfuck = fopen(name, "r");}
-	if(witfuck = NULL) {printw("File name invalid! Aborting..."); sleep(1); endwin(); abort();}
+	if(witfuck == NULL) {printw("File name invalid! Aborting..."); sleep(1); endwin(); abort();}
 	fgets(query, sizeof(query), witfuck);
 	fclose(witfuck);
 }
@@ -25,13 +25,13 @@ void SaveBFWFile(char q[])
 {
 	FILE *witfuck;
 	char fileName[FMAX] = {0};
-	printw("For reasons beyond my ability to care, ");
-	printw("you only get a %hu-long filename. \n", FILENAME_MAX);
-	printw("Please enter the name of the script you want to save: "); refresh(); scanw(" %s", fileName);
+	printw("\nFor reasons beyond my ability to care, ");
+	printw("you only get a %hu-long filename. \n", (FMAX - 1));
+	printw("Please enter the name of the script you want to save: "); refresh(); scanw(" %16s", fileName);
 	char fullName[FMAX + 6] = "~/bfw/";
 	strcat(fullName, fileName);
 	witfuck = fopen(fullName, "w");
-	if(witfuck = NULL) {printw("File name invalid! Aborting..."); sleep(1); endwin(); abort();}
+	if(witfuck == NULL) {printw("File name invalid! Aborting..."); sleep(1); endwin(); abort();}
 	fputs(query, witfuck);
 	fclose(witfuck);
 }
@@ -41,7 +41,7 @@ void EditorHelpScreen()
 {
 	clear();
 	printw("Type in any of the 18 specifcation characters as you would a notepad-like program.\n");
-	printw("Pressing \'c\' clears the entire script, letting you start over again.");
+	printw("Pressing \'c\' clears the entire script, letting you start over again.\n");
 	printw("Pressing \'h\' brings up this screen.\nPress the any key to go back to the editor.\n");
 	printw("Pressing \'q\' q quits the editor.");
 	refresh(); char dummy = getch(); 
@@ -107,7 +107,7 @@ void LaunchBFWEditor()
 			default: break;
 		}
 	}
-	printw("Press y if you want to save your script to a file. "); refresh(); value = getch();
+	printw("\nPress y if you want to save your script to a file. "); refresh(); value = getch();
 	if(value == 'y') {SaveBFWFile(query);}
 }
 

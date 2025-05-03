@@ -68,6 +68,8 @@ int main(int argc, char* argv[])
 {
 	srand(time(NULL));
 	initscr();
+	raw();
+	keypad(stdscr, TRUE);
 	if(argc > 1)
 	{
 		//argv[1][1] should be the second character of the second argument, ideally i or c.

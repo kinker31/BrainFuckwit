@@ -31,16 +31,16 @@ void BrainFuckwitCompiler(char q[])
 			fprintf(bfwFile, "if(CHECK_BOUNDS){counter--;}\n"); break;
 			
 			case '.':
-			fprintf(bfwFile, "if(CELL > 255){printf(\"NaC\n\");} else{printf(\"%c \", (char)CELL)};\n"); break;
+			fprintf(bfwFile, "if(CELL > 255){printf(\"NaC\\n\");} else{printf(\"%%c \", (char)CELL)};\n"); break;
 			
 			case ':':
-			fprintf(bfwFile, "printf(\"%hu \", CELL);\n"); break;
+			fprintf(bfwFile, "printf(\"%%hu \", CELL);\n"); break;
 			
 			case ',':
-			fprintf(bfwFile, "printf(\"Please enter a character here: \"); scanf(\" %c\", (char)&CELL);\n"); break;
+			fprintf(bfwFile, "printf(\"Please enter a character here: \"); scanf(\" %%c\", (char)&CELL);\n"); break;
 			
 			case ';':
-			fprintf(bfwFile, "printf(\"Please enter an integer here: \"); scanf(\" %hu\", &CELL);\n"); break;
+			fprintf(bfwFile, "printf(\"Please enter an integer here: \"); scanf(\" %%hu\", &CELL);\n"); break;
 			
 			case '/':
 			fprintf(bfwFile, "if(counter > 1 && TAPE[counter + 1] == 0){InlineSwap(CELL, TAPE[counter + 1] );}\n"); break;
@@ -58,7 +58,7 @@ void BrainFuckwitCompiler(char q[])
 			fprintf(bfwFile, "CELL = 0;"); break;
 			
 			case '\?':
-			fprintf(bfwFile, "CELL = (rand() % 256) + 1;\n"); break;
+			fprintf(bfwFile, "CELL = (rand() %% 256) + 1;\n"); break;
 			
 			case '@':
 			fprintf(bfwFile, "CELL *= 2;\n"); break;
@@ -74,6 +74,7 @@ void BrainFuckwitCompiler(char q[])
 			
 			default: break;
 		}
+		counter++;
 	}
 	fprintf(bfwFile, "return 0;\n}");
 	fclose(bfwFile);
