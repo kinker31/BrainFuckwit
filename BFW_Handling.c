@@ -8,10 +8,10 @@ void OpenBFWFile(bool mode, char name[])
 	if(mode)
 	{
 		char fileName[FMAX] = {0};
-		printw("\nFor reasons beyond my ability to care, ");
-		printw("you only get a %hu-long filename. \n", (FMAX - 1));
+		printw("\nFor reasons beyond my ability to care, you only get a %hu-long filename. \n", (FMAX - 1));
 		printw("Please enter the name of the file you want to open: "); refresh(); scanw(" %16s", fileName);
-		char fullName[FMAX + 6] = "~/bfw/";
+		char fullName[CPATH_MAX];
+		strcat(strcpy(fullName, getenv("HOME")), "/bfw/");
 		strcat(fullName, fileName);
 		witfuck = fopen(fullName, "r");
 	}
@@ -25,10 +25,10 @@ void SaveBFWFile(char q[])
 {
 	FILE *witfuck;
 	char fileName[FMAX] = {0};
-	printw("\nFor reasons beyond my ability to care, ");
-	printw("you only get a %hu-long filename. \n", (FMAX - 1));
+	printw("\nFor reasons beyond my ability to care, you only get a %hu-long filename. \n", (FMAX - 1));
 	printw("Please enter the name of the script you want to save: "); refresh(); scanw(" %16s", fileName);
-	char fullName[FMAX + 6] = "~/bfw/";
+	char fullName[CPATH_MAX];
+	strcat(strcpy(fullName, getenv("HOME")), "/bfw/");
 	strcat(fullName, fileName);
 	witfuck = fopen(fullName, "w");
 	if(witfuck == NULL) {printw("File name invalid! Aborting..."); sleep(1); endwin(); abort();}
@@ -44,7 +44,7 @@ void EditorHelpScreen()
 	printw("Pressing \'c\' clears the entire script, letting you start over again.\n");
 	printw("Pressing \'h\' brings up this screen.\nPress the any key to go back to the editor.\n");
 	printw("Pressing \'q\' q quits the editor.");
-	refresh(); char dummy = getch(); 
+	refresh(); (void) getch(); 
 }
 
 void ShowCurrentScript(suint l)
@@ -107,7 +107,8 @@ void LaunchBFWEditor()
 			default: break;
 		}
 	}
-	printw("\nPress y if you want to save your script to a file. "); refresh(); value = getch();
+	printw("\nPress y if you want to save your script to a file. "); 
+	refresh(); value = getch();
 	if(value == 'y') {SaveBFWFile(query);}
 }
 

@@ -127,5 +127,6 @@ void BrainFuckwitInterpreter()
 		}
 		counter++;
 	}
-	printw("The interpreter has finished! Press the any key to continue. "); refresh(); char dummy = getch();
+	printw("The interpreter has finished! Press the any key to continue. "); 
+	refresh(); (void) getch();
 }

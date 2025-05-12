@@ -10,19 +10,17 @@ void HelpScreen()
 	printw("Pressing \'h\' brings up this screen.\n");
 	printw("Pressing \'q\' exits the program.\n\n");
 	printw("Press the any key to continue.\nFeel free to mash your face on the keyboard if you can't find it.\n");
-	char dummy = getch();
+	(void) getch();
 }
 
 void InteractiveHandler()
 {
 	char selector = 'p';
 	printw("Welcome to matrixDoppelganger's BrainFuckwit Program!!!\n");
-	refresh();
-	sleep(1);
+	refresh(); sleep(1);
 	while(selector != 'q')
 	{
 		clear();
-		printw("Current Selector value is %c\n", selector);
 		printw("Make your selection now. \nPress 'h' for help if you're lost: "); refresh();
 		selector = getch(); printw("\n");
 		switch(selector)
@@ -33,7 +31,8 @@ void InteractiveHandler()
 			
 			case 'x':
 			OpenBFWFile(false, "examplescript.bfw");
-			printw("Example script loaded! Whever you want to interpret or compile it is up to you.\nPress the any key to continue..."); refresh(); char dummy = getch();
+			printw("Example script loaded! Whever you want to interpret or compile it is up to you.\nPress the any key to continue..."); 
+			refresh(); (void) getch();
 			break;
 			
 			case 'i':
@@ -67,8 +66,6 @@ refresh();
 int main(int argc, char* argv[])
 {
 	srand(time(NULL));
-	initscr();
-	raw();
 	keypad(stdscr, TRUE);
 	if(argc > 1)
 	{
@@ -77,21 +74,28 @@ int main(int argc, char* argv[])
 		switch (value)
 		{
 			case 'c':
+			initscr();
 			OpenBFWFile(false, argv[2]);
 			BrainFuckwitCompiler();
 			break;
 			
 			case 'i':
+			initscr();
 			OpenBFWFile(false, argv[2]);
 			BrainFuckwitInterpreter();
 			break;
 			
 			default:
-			printw("Usage case: bfw [-c|-i|] [(filename).bfw] (Press any key to exit.)"); refresh(); char dummy = getch();
-			break;
+			printf("Usage case: bfw [-c|-i|] [(filename).bfw]\n");
+			abort();
 		}
 	}
-	else{InteractiveHandler();}
+	else
+	{
+		initscr();
+		raw();
+		InteractiveHandler();
+	}
 	endwin();
 	return 0;
 }

@@ -1,28 +1,31 @@
 #include "BFW_Interpreter.c"
+#define CPATH_MAX 128
 
 void BrainFuckwitCompiler()
 {
 	suint counter = 0;
-	FILE *bfwFile = fopen("compiledbfwscript.c", "w+");
+	char path[CPATH_MAX]; 
+	strcat(strcpy(path, getenv("HOME")), "/bfw/compiledbfwscript.c");
+	FILE *bfwFile = fopen(path, "w+");
+	if(bfwFile == NULL) {printw("Something went wrong! Aborting..."); refresh(); sleep(5); endwin(); abort();}
 	fprintf(bfwFile, "#include <stdio.h>\n");
 	fprintf(bfwFile, "#include <stdlib.h>\n");
 	fprintf(bfwFile, "#include <time.h>\n\n");
 	fprintf(bfwFile, "#define suint short unsigned int\n");
 	fprintf(bfwFile, "#define MAX_SIZE 65536\n");
 	fprintf(bfwFile, "#define CHECK_BOUNDS (counter > 0) && (counter < MAX_SIZE)\n");
-	fprintf(bfwFile, "#define CELL TAPE[counter]\n");
-	fprintf(bfwFile, "#define InlineSwap(a, b) ((b = a) (a = 0))\n\n");
+	fprintf(bfwFile, "void InlineSwap(suint *a, suint *b) {*b = *a; *a = 0;}\n\n");
 	fprintf(bfwFile, "int main()\n{\n");
-	fprintf(bfwFile, "srand(time(NULL));\nsuint TAPE[MAX_SIZE} = {0};\nsuint counter, binVal = 0;\n\n");
+	fprintf(bfwFile, "srand(time(NULL));\nsuint TAPE[MAX_SIZE] = {0};\nsuint counter, binVal = 0;\n\n");
 	while((counter < MAX_QUERY) && (query[counter] != 0))
 	{
 		switch(query[counter])
 		{
 			case '+':
-			fprintf(bfwFile, "CELL++;\n"); break;
+			fprintf(bfwFile, "TAPE[counter]++;\n"); break;
 			
 			case '-':
-			fprintf(bfwFile, "CELL--;\n"); break;
+			fprintf(bfwFile, "TAPE[counter]--;\n"); break;
 			
 			case '>':
 			fprintf(bfwFile, "if(CHECK_BOUNDS){counter++;}\n"); break;
@@ -31,46 +34,46 @@ void BrainFuckwitCompiler()
 			fprintf(bfwFile, "if(CHECK_BOUNDS){counter--;}\n"); break;
 			
 			case '.':
-			fprintf(bfwFile, "if(CELL > 255){printf(\"NaC\\n\");} else{printf(\"%%c \", (char)CELL)};\n"); break;
+			fprintf(bfwFile, "if(TAPE[counter] > 255){printf(\"NaC\\n\");} else{printf(\"%%c \", (char)TAPE[counter]);}\n"); break;
 			
 			case ':':
-			fprintf(bfwFile, "printf(\"%%hu \", CELL);\n"); break;
+			fprintf(bfwFile, "printf(\"%%hu \", TAPE[counter]);\n"); break;
 			
 			case ',':
-			fprintf(bfwFile, "printf(\"Please enter a character here: \"); scanf(\" %%c\", (char)&CELL);\n"); break;
+			fprintf(bfwFile, "printf(\"Please enter a character here: \"); scanf(\" %%c\", (char)&TAPE[counter]);\n"); break;
 			
 			case ';':
-			fprintf(bfwFile, "printf(\"Please enter an integer here: \"); scanf(\" %%hu\", &CELL);\n"); break;
+			fprintf(bfwFile, "printf(\"Please enter an integer here: \"); scanf(\" %%hu\", &TAPE[counter]);\n"); break;
 			
 			case '/':
-			fprintf(bfwFile, "if(counter > 1 && TAPE[counter + 1] == 0){InlineSwap(CELL, TAPE[counter + 1] );}\n"); break;
+			fprintf(bfwFile, "if(counter > 1 && TAPE[counter + 1] == 0){InlineSwap(&TAPE[counter], &TAPE[counter + 1] );}\n"); break;
 			
 			case '\\':
-			fprintf(bfwFile, "if(counter > (MAX_SIZE - 2) && TAPE[counter - 1] == 0){InlineSwap(CELL, TAPE[counter - 1] );}\n"); break;
+			fprintf(bfwFile, "if(counter > (MAX_SIZE - 2) && TAPE[counter - 1] == 0){InlineSwap(&TAPE[counter], &TAPE[counter - 1] );}\n"); break;
 			
 			case '[':
-			fprintf(bfwFile, "while(CELL != 0)\n{\n"); break;
+			fprintf(bfwFile, "while(TAPE[counter] != 0)\n{\n"); break;
 			
 			case ']':
 			fprintf(bfwFile, "}\n"); break;
 			
 			case '!':
-			fprintf(bfwFile, "CELL = 0;"); break;
+			fprintf(bfwFile, "TAPE[counter] = 0;"); break;
 			
 			case '\?':
-			fprintf(bfwFile, "CELL = (rand() %% 256) + 1;\n"); break;
+			fprintf(bfwFile, "TAPE[counter] = (rand() %% 256) + 1;\n"); break;
 			
 			case '@':
-			fprintf(bfwFile, "CELL *= 2;\n"); break;
+			fprintf(bfwFile, "TAPE[counter] *= 2;\n"); break;
 			
 			case '$':
-			fprintf(bfwFile, "binVal = CELL; CELL = 0;\n"); break;
+			fprintf(bfwFile, "binVal = TAPE[counter]; TAPE[counter] = 0;\n"); break;
 			
 			case '#':
-			fprintf(bfwFile, "CELL = binVal; binVal = 0;\n"); break;
+			fprintf(bfwFile, "TAPE[counter] = binVal; binVal = 0;\n"); break;
 			
 			case '%':
-			fprintf(bfwFile, "CELL *= binVal; binVal = 0;\n"); break;
+			fprintf(bfwFile, "TAPE[counter] *= binVal; binVal = 0;\n"); break;
 			
 			default: break;
 		}
@@ -78,5 +81,7 @@ void BrainFuckwitCompiler()
 	}
 	fprintf(bfwFile, "return 0;\n}");
 	fclose(bfwFile);
-	printw("Thy script compiled!\nDo keep in mind though, until I can figure out how to call GCC within C code, you'll have to build the program manaully.\nPress the any key to continue. "); refresh(); char dummy = getch();
+	system("gcc -o ~/bfw/bfwProg ~/bfw/compiledbfwscript.c");
+	printw("Done and done! (You can also see the script the program compiled over at ~/bfw.)\nPress any key to continue. "); 
+	refresh(); (void) getch();
 }
